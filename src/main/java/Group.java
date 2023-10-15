@@ -28,13 +28,13 @@ public class Group {
 
     @Override
     public String toString() {
-        Arrays.sort(students, Comparator.nullsFirst(new StudentLastNameComparator()));
+        sortStudentsByLastName();
         StringBuilder outLine = new StringBuilder();
         outLine.append("groupName : " + groupName + "\n");
         for (int counter = 0; counter <= students.length - 1; counter++) {
             if (students[counter] != null) {
                 outLine.append(students[counter].toString() + "\n");
-            }else outLine.append("Vacant place\n");
+            } else outLine.append("Vacant place\n");
         }
         return outLine.toString();
     }
@@ -52,7 +52,7 @@ public class Group {
     public Student searchStudentByLastName(String lastName) throws StudentNotFoundException {
         for (int count = 0; count <= students.length - 1; count++) {
             if (students[count] != null) {
-                if (students[count].getLastName() == lastName) {
+                if (students[count].getLastName().equals(lastName)) {
                     return students[count];
                 }
             }
@@ -70,5 +70,9 @@ public class Group {
             }
         }
         return false;
+    }
+
+    public void sortStudentsByLastName() {
+        Arrays.sort(students, Comparator.nullsFirst((student1, student2) -> student1.getLastName().compareTo(student2.getLastName())));
     }
 }
