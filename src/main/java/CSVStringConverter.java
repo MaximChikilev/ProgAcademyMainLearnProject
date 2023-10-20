@@ -10,7 +10,7 @@ public class CSVStringConverter implements StringConverter {
     public Student fromStringRepresentation(String str) {
         Scanner scanner = new Scanner(str);
         scanner.useDelimiter(",");
-        int id = StudentIdGenerator.getNewId();
+        int id = Integer.valueOf(scanner.next());
         String name = scanner.next();
         String lastName = scanner.next();
         Gender gender = Gender.valueOf(scanner.next());
