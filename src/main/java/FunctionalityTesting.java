@@ -56,4 +56,9 @@ public class FunctionalityTesting {
         System.out.println();
     }
 
+    public static void findStudentDuplicateTesting(Group javaGroup) {
+        System.out.println("There are : " + javaGroup.checkStudentsDuplicates() + " duplicates");
+    }
 }
+
+

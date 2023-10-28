@@ -1,5 +1,7 @@
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class Group {
     private String groupName;
@@ -39,6 +41,22 @@ public class Group {
         return outLine.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (!(o instanceof Group)) return false;
+        Group group = (Group) o;
+        return Objects.equals(getGroupName(), group.getGroupName()) && Arrays.equals(getStudents(), group.getStudents());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getGroupName());
+        result = 31 * result + Arrays.hashCode(getStudents());
+        return result;
+    }
+
     public void addStudent(Student student) throws GroupOverflowException {
         for (int count = 0; count <= students.length - 1; count++) {
             if (students[count] == null) {
@@ -74,5 +92,19 @@ public class Group {
 
     public void sortStudentsByLastName() {
         Arrays.sort(students, Comparator.nullsFirst((student1, student2) -> student1.getLastName().compareTo(student2.getLastName())));
+    }
+
+    public int checkStudentsDuplicates() {
+        long uniqueStudentCount = Stream.of(students).distinct().count();
+        int vacantPlaceQuantity = vacantPlaceCounter();
+        return (int) (students.length - ((vacantPlaceQuantity == 0) ? 0 : vacantPlaceQuantity - 1) - uniqueStudentCount);
+    }
+
+    private int vacantPlaceCounter() {
+        int counter = 0;
+        for (Student element : students) {
+            if (element == null) counter++;
+        }
+        return counter;
     }
 }

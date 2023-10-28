@@ -1,4 +1,5 @@
 import java.util.Comparator;
+import java.util.Objects;
 
 public class Student extends Human {
     private int id;
@@ -34,9 +35,23 @@ public class Student extends Human {
     public String toString() {
         return
                 "Name: " + super.getName() + " | " +
-                "Last name: " + super.getLastName() + " | " +
-                "Gender: " + super.getGender() + " | " +
-                "Id: " + id + " | " +
-                "GroupName: " + groupName + " | ";
+                        "Last name: " + super.getLastName() + " | " +
+                        "Gender: " + super.getGender() + " | " +
+                        "Id: " + id + " | " +
+                        "GroupName: " + groupName + " | ";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (!(o instanceof Student)) return false;
+        Student student = (Student) o;
+        return getId() == student.getId() && Objects.equals(getGroupName(), student.getGroupName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getGroupName());
     }
 }

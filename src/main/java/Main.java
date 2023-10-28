@@ -8,6 +8,7 @@ public class Main {
         FunctionalityTesting.inputNewStudentFromKeyboardAndTransferToCsvTest();
         FunctionalityTesting.deleteStudentTest(javaGroup);
         FunctionalityTesting.findFileTesting(javaGroup);
+        FunctionalityTesting.findStudentDuplicateTesting(javaGroup);
     }
 
 
