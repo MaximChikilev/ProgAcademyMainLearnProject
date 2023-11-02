@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.List;
 
 public class GroupFileStorage {
     private String defaultPath = "./src/main/resources/";
@@ -10,7 +11,7 @@ public class GroupFileStorage {
     public void saveGroupToCSV(Group group) {
         File file = new File(defaultPath + group.getGroupName() + ".csv");
         StringConverter csvStringConverter = new CSVStringConverter();
-        Student[] students = group.getStudents();
+        List<Student> students = group.getStudents();
         try (Writer writer = new FileWriter(file)) {
             for (Student element : students) {
                 if (element != null) {

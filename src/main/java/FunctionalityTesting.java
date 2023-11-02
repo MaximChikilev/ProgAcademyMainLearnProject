@@ -21,6 +21,7 @@ public class FunctionalityTesting {
 
     public static void searchStudentTest(Group javaGroup) {
         try {
+            System.out.println("Student was founded");
             System.out.println(javaGroup.searchStudentByLastName("Bloch").toString());
             //System.out.println(javaGroup.searchStudentByLastName("Petrenko").toString());
         } catch (StudentNotFoundException e) {

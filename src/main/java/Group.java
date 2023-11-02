@@ -1,19 +1,18 @@
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class Group {
     private String groupName;
-    private final Student[] students;
+    private final List<Student> students;
+    private final int maxStudentInGroup = 10;
 
     public Group(String groupName) {
         this.groupName = groupName;
-        students = new Student[10];
+        students = new ArrayList<Student>();
     }
 
     public Group() {
-        students = new Student[10];
+        students = new ArrayList<Student>();
     }
 
     public String getGroupName() {
@@ -24,7 +23,7 @@ public class Group {
         this.groupName = groupName;
     }
 
-    public Student[] getStudents() {
+    public List<Student> getStudents() {
         return students;
     }
 
@@ -33,10 +32,11 @@ public class Group {
         sortStudentsByLastName();
         StringBuilder outLine = new StringBuilder();
         outLine.append("groupName : " + groupName + "\n");
-        for (int counter = 0; counter <= students.length - 1; counter++) {
-            if (students[counter] != null) {
-                outLine.append(students[counter].toString() + "\n");
-            } else outLine.append("Vacant place\n");
+        for (Student element:students){
+            outLine.append(element.toString()+"\n");
+        }
+        for (int counter = students.size(); counter < maxStudentInGroup; counter++) {
+            outLine.append("Vacant place\n");
         }
         return outLine.toString();
     }
@@ -44,60 +44,54 @@ public class Group {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null) return false;
         if (!(o instanceof Group)) return false;
         Group group = (Group) o;
-        return Objects.equals(getGroupName(), group.getGroupName()) && Arrays.equals(getStudents(), group.getStudents());
+        return maxStudentInGroup == group.maxStudentInGroup && Objects.equals(getGroupName(), group.getGroupName()) && Objects.equals(getStudents(), group.getStudents());
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getGroupName());
-        result = 31 * result + Arrays.hashCode(getStudents());
-        return result;
+        return Objects.hash(getGroupName(), getStudents(), maxStudentInGroup);
     }
 
     public void addStudent(Student student) throws GroupOverflowException {
-        for (int count = 0; count <= students.length - 1; count++) {
-            if (students[count] == null) {
-                students[count] = student;
-                return;
-            }
-        }
-        throw new GroupOverflowException("Group is full");
+        if (!isGroupFull()){
+            students.add(student);
+        } else throw new GroupOverflowException("Group is full");
+    }
+    public boolean isGroupFull(){
+        if(students.size()==maxStudentInGroup){
+            return true;
+        } else return false;
     }
 
     public Student searchStudentByLastName(String lastName) throws StudentNotFoundException {
-        for (int count = 0; count <= students.length - 1; count++) {
-            if (students[count] != null) {
-                if (students[count].getLastName().equals(lastName)) {
-                    return students[count];
-                }
+        for(Student element:students){
+            if (element.getLastName().equals(lastName)){
+                return element;
             }
         }
         throw new StudentNotFoundException("Student not found");
     }
 
     public boolean removeStudentByID(int id) {
-        for (int count = 0; count <= students.length - 1; count++) {
-            if (students[count] != null) {
-                if (students[count].getId() == id) {
-                    students[count] = null;
-                    return true;
-                }
+        ListIterator<Student> studentListIterator = students.listIterator();
+        while (studentListIterator.hasNext()){
+            if (studentListIterator.next().getId()==id){
+                studentListIterator.remove();
+                return true;
             }
         }
         return false;
     }
 
     public void sortStudentsByLastName() {
-        Arrays.sort(students, Comparator.nullsFirst((student1, student2) -> student1.getLastName().compareTo(student2.getLastName())));
+        Collections.sort(students, Comparator.nullsFirst((student1, student2) -> student1.getLastName().compareTo(student2.getLastName())));
     }
 
     public int checkStudentsDuplicates() {
-        long uniqueStudentCount = Stream.of(students).distinct().count();
-        int vacantPlaceQuantity = vacantPlaceCounter();
-        return (int) (students.length - ((vacantPlaceQuantity == 0) ? 0 : vacantPlaceQuantity - 1) - uniqueStudentCount);
+        long uniqueStudentCount = students.stream().distinct().count();
+        return (int) (students.size() -  uniqueStudentCount);
     }
 
     private int vacantPlaceCounter() {
